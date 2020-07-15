@@ -12,10 +12,10 @@ class CategoryController{
     }
 
     static async create(req, res, next) {
-        const { title } = req.body
-        const newCategory = { title }
+        const { name } = req.body
+        const newCategory = { name }
         try {
-            await Task.create(newCategory)
+            await Category.create(newCategory)
             res.status(201).json({msg:'Category created successfully.'})
         } catch (error) {
             console.log(error)
@@ -40,8 +40,8 @@ class CategoryController{
 
     static async edit (req,res,next){
         const {id} = req.params
-        const { title } = req.body
-        const updatedCategory = { title }
+        const { name } = req.body
+        const updatedCategory = { name }
         try {
             const foundCategory = await Category.findByPk(id)
             if(!foundCategory){

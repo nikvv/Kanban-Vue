@@ -1,2 +1,3 @@
 sequelize model:generate --name User --attributes username:STRING,email:STRING,password:STRING,organization:STRING
 sequelize model:generate --name Task --attributes title:STRING,description:STRING,category_id:INTEGER
+sequelize model:generate --name Category --attributes name:STRING

@@ -1,4 +1,4 @@
-const { Task } = require('../models')
+const { Task,User } = require('../models')
 const { verifyToken } = require('../helpers/jwt')
 
 class TaskController {
@@ -8,7 +8,7 @@ class TaskController {
         const decoded = verifyToken(access_token)
         
         try {
-            const allTask = await Task.findAll()
+            const allTask = await Task.findAll({include:[{model:User}]})  
             res.status(200).json({allTask})
         } catch (error) {
             console.log(error)
@@ -21,8 +21,8 @@ class TaskController {
         const { title, description} = req.body
         const newTask = { title, description, user_id, category_id }
         try {
-            await Task.create(newTask)
-            res.status(201).json({msg:'Task created successfully.'})
+            const createdTask = await Task.create(newTask)
+            res.status(201).json({msg:'Task created successfully.',createdTask})
         } catch (error) {
             console.log(error)
         }
@@ -36,8 +36,8 @@ class TaskController {
                 throw ({status:404,msg:"Task not found."})
             }
             else{
-                await Task.destroy({where:{id}})
-                res.status(200).json({msg:'Task successfully deleted.'})
+                const deletedTask = await Task.destroy({where:{id}})
+                res.status(200).json({msg:'Task successfully deleted.',deletedTask})
             }
         } catch (error) {
             console.log(error)

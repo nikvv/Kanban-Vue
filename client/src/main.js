@@ -32,12 +32,12 @@ var app = new Vue({
             
         })
         .then(({data})=>{
-            console.log(data.allTask)
+            console.log(data)
             this.taskList = data.allTask
         })
     },
     methods: {
-        addNewTask: function (category_id) {
+        addNewTask(category_id) {
             axios({
                 method: 'post',
                 url: `${this.base_url}/tasks`,
@@ -50,8 +50,9 @@ var app = new Vue({
                     category_id
                 }
             })
-            .done(data =>{
-                console.log(data)
+            .then(({data}) =>{
+                console.log(data.createdTask)
+                this.taskList.push(data.createdTask)
             })
             .catch(err=>{
                 console.log(err)
@@ -66,7 +67,7 @@ var app = new Vue({
                     access_token:localStorage.access_token,
                 }
             })
-            .done(data=>{
+            .then(data=>{
                 console.log(data)
             })
         }

@@ -3,12 +3,12 @@ const { verifyToken } = require('../helpers/jwt')
 
 class TaskController {
 
-    static async allUserTasks(req,res,next){
+    static async findAll(req,res,next){
         const {access_token} = req.headers
         const decoded = verifyToken(access_token)
-        const user_id = decoded.id
+        
         try {
-            const allTask = await Task.findAll({where:{user_id}})
+            const allTask = await Task.findAll()
             res.status(200).json({allTask})
         } catch (error) {
             console.log(error)

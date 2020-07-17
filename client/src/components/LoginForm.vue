@@ -28,9 +28,13 @@
           >
             Log In
           </button>
-          <p class="text-xs text-blue-900 mt-3">Don't have an account? <span class="text-blue-900 font-bold">Register now!</span></p>
         </form>
-        <button v-google-signin-button="clientId" class="google-signin-button">Continue with Google</button>
+        <div class="flex flex-col justify-between">
+          <p class="text-xs text-blue-900 mt-3">
+            Don't have an account? <button @click="showRegisterForm" class="text-blue-900 font-bold cursor-pointer">Register now!</button>
+          </p>
+          <button v-google-signin-button="clientId" class="mt-4 google-signin-button">Continue with Google</button>
+        </div>
       </div>
     </section>
   </div>
@@ -52,15 +56,16 @@ export default {
       const payload = { email: this.email, password: this.password };
       this.$emit("submit-login", payload);
     },
-     OnGoogleAuthSuccess (idToken) {
-      
-      this.$emit('onGoogleAuthSuccess',idToken)
+    OnGoogleAuthSuccess(idToken) {
+      this.$emit("onGoogleAuthSuccess", idToken);
       // Receive the idToken and make your magic with the backend
     },
-    OnGoogleAuthFail (error) {
-      console.log(error)
+    OnGoogleAuthFail(error) {
+      console.log(error);
     },
-  
+    showRegisterForm() {
+      this.$emit("show-register-form");
+    },
   },
 };
 </script>

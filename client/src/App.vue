@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <div v-if="pageName === 'home'">
       <!-- NAVBAR -->
       <nav class="flex h-20 justify-center bg-gray-400 border-b-8 border-gray-600">
@@ -19,7 +18,7 @@
       <div class="flex flex-wrap mx-24 items-start">
         <!-- KANBAN BOARD -->
         <KanbanBoard
-          v-for="(category,index) in categoryList"
+          v-for="(category, index) in categoryList"
           :key="category.id"
           :index="index"
           :length="categoryList.length"
@@ -30,7 +29,6 @@
           @delete-task="deleteTask"
           @edit-task="editTask"
           @delete-board="deleteBoard"
-          
         ></KanbanBoard>
         <div class="mt-20 mb-4 mx-2 bg-gray-300 rounded w-64 p-4">
           <NewBoardButton @toggle-add-board="toggleAddBoard" :showAddBoard="showAddBoard"></NewBoardButton>
@@ -39,8 +37,13 @@
       </div>
     </div>
 
-    
-    <LoginForm v-else-if="`login`" @onGoogleAuthSuccess="googleLogin" @submit-login="login"></LoginForm>
+    <LoginForm
+      v-else-if="pageName === `login`"
+      @show-register-form="showRegisterForm"
+      @onGoogleAuthSuccess="googleLogin"
+      @submit-login="login"
+    ></LoginForm>
+    <RegisterForm v-else-if="pageName === `register`" @submit-register="register"></RegisterForm>
   </div>
 </template>
 
@@ -49,15 +52,15 @@ import KanbanBoard from "./components/KanbanBoard";
 import NewBoardButton from "./components/NewBoardButton";
 import NewBoardForm from "./components/NewBoardForm";
 import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
 
-
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 export default {
   name: "App",
   data() {
     return {
-      base_url: "https://thawing-peak-12651.herokuapp.com",
+      base_url: "https://thawing-peak-12651.herokuapp.com", // http://localhost:3000
       taskList: [],
       categoryList: [],
       addTitle: "",
@@ -73,7 +76,7 @@ export default {
     NewBoardButton,
     NewBoardForm,
     LoginForm,
-    
+    RegisterForm,
   },
   created() {
     this.auth();
@@ -86,7 +89,26 @@ export default {
     // }
   },
   methods: {
-    errorHandler() {},
+    register(payload){
+      axios({
+        method:'post',
+        url:`${this.base_url}/register`,
+        data:{
+          username:payload.username,
+          email:payload.email,
+          password:payload.password
+        }
+      })
+      .then(()=>{
+        this.auth()
+      })
+      .catch(error=>{
+        console.log(error)
+      })
+    },
+    showRegisterForm() {
+      this.pageName = "register";
+    },
     auth() {
       if (localStorage.access_token) {
         this.fetchCategories();
@@ -96,21 +118,18 @@ export default {
         this.pageName = "login";
       }
     },
-    googleLogin(token){
-      console.log(token)
+    googleLogin(token) {
+      console.log(token);
       axios({
-        url:`${this.base_url}/google-login`,
-        method:'post',
-        data:{
-          token
-        }
-      })
-      .then(({data})=>{
-          localStorage.access_token = data.token
-          this.auth()
-      })
-      
-      
+        url: `${this.base_url}/google-login`,
+        method: "post",
+        data: {
+          token,
+        },
+      }).then(({ data }) => {
+        localStorage.access_token = data.token;
+        this.auth();
+      });
     },
     login(payload) {
       // console.log(payload)
@@ -127,7 +146,7 @@ export default {
           this.auth();
         })
         .catch((error) => {
-          Swal.fire('Error',`spamerror.response.data`,'error')
+          Swal.fire("Error", `<span>${error.response.data}</span>`, "error");
           console.log(error.response.data);
         });
     },
@@ -175,7 +194,7 @@ export default {
         },
       })
         .then(({ data }) => {
-          console.log(data)
+          console.log(data);
           this.fetchTasks();
         })
         .catch((err) => {
@@ -205,7 +224,7 @@ export default {
         },
       }).then((data) => {
         console.log(data);
-        this.fetchTasks()
+        this.fetchTasks();
       });
     },
     toggleAddBoard() {

@@ -6,6 +6,7 @@ const categoryRouter = require('./category-router')
 
 router.post('/register',UserController.register)
 router.post('/login',UserController.login)
+router.post('/google-login',UserController.verify)
 router.use('/tasks',taskRouter)
 router.use('/categories',categoryRouter)
 

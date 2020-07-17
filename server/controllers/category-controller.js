@@ -1,4 +1,5 @@
-const {Category} = require('../models')
+const {Category,Task} = require('../models')
+
 
 class CategoryController{
 
@@ -15,8 +16,8 @@ class CategoryController{
         const { name } = req.body
         const newCategory = { name }
         try {
-            await Category.create(newCategory)
-            res.status(201).json({msg:'Category created successfully.'})
+            const createdCategory = await Category.create(newCategory)
+            res.status(201).json({msg:'Category created successfully.',createdCategory})
         } catch (error) {
             console.log(error)
         }
@@ -30,8 +31,15 @@ class CategoryController{
                 throw ({status:404,msg:"Category not found."})
             }
             else{
-                await Category.destroy({where:{id}})
-                res.status(200).json({msg:'Category successfully deleted.'})
+                const allCategoryTask = await Task.findAll({where:{category_id:id}})
+                // let promises = []
+                allCategoryTask.forEach(async function(task){
+                    await Task.destroy({where:{id:task.id}})
+                    // promises.push(destroyedTask)
+                })
+                const destroyedCategory = await Category.destroy({where:{id}})
+
+                res.status(200).json({msg:'Category successfully deleted.',destroyedCategory})
             }
         } catch (error) {
             console.log(error)

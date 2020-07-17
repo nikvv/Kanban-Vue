@@ -57,7 +57,7 @@ export default {
   name: "App",
   data() {
     return {
-      base_url: "http://localhost:3000",
+      base_url: "https://thawing-peak-12651.herokuapp.com",
       taskList: [],
       categoryList: [],
       addTitle: "",

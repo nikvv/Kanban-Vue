@@ -12,12 +12,12 @@ class TaskController {
             res.status(200).json({allTask})
         } catch (error) {
             console.log(error)
+            next(error)
         }
     }
     static async create(req, res, next) {
-        const {access_token,category_id} = req.headers
-        const decoded = verifyToken(access_token)
-        const user_id = decoded.id
+        const {category_id} = req.headers
+        const user_id = req.userData.id
         const { title, description} = req.body
         const newTask = { title, description, user_id, category_id }
         try {
@@ -41,6 +41,7 @@ class TaskController {
             }
         } catch (error) {
             console.log(error)
+            next(error)
         }
     }
 
@@ -59,6 +60,7 @@ class TaskController {
             }
         } catch (error) {
             console.log(error)
+            next(error)
         }
     }
 }

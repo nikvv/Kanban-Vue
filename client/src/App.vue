@@ -60,7 +60,7 @@ export default {
   name: "App",
   data() {
     return {
-      base_url: "https://thawing-peak-12651.herokuapp.com", // http://localhost:3000
+      base_url: "http://localhost:3000", // http://localhost:3000 https://thawing-peak-12651.herokuapp.com
       taskList: [],
       categoryList: [],
       addTitle: "",
@@ -210,7 +210,10 @@ export default {
         },
       }).then((data) => {
         this.fetchTasks();
-      });
+      }).catch( error =>{
+        console.log(`${error}`)
+        Swal.fire("Error", `<span>${error}</span>`, "error");
+      })
     },
     editTask(payload) {
       axios({
@@ -221,11 +224,16 @@ export default {
           description: payload.description,
           category_id: payload.category_id,
           user_id: payload.user_id,
+        },   
+        headers: {
+          access_token: localStorage.access_token,
         },
       }).then((data) => {
         console.log(data);
         this.fetchTasks();
-      });
+      }).catch(error =>{
+                Swal.fire("Error", `<span>${error}</span>`, "error");
+      }) 
     },
     toggleAddBoard() {
       this.showAddBoard = !this.showAddBoard;

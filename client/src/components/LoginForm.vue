@@ -33,7 +33,7 @@
           <p class="text-xs text-blue-900 mt-3">
             Don't have an account? <button @click="showRegisterForm" class="text-blue-900 font-bold cursor-pointer">Register now!</button>
           </p>
-          <button v-google-signin-button="clientId" class="mt-4 google-signin-button">Continue with Google</button>
+          <button v-google-signin-button="clientId" class="mt-4  google-signin-button">Continue with Google</button>
         </div>
       </div>
     </section>
